@@ -5,19 +5,40 @@ Doorkeeper.configure do
   # Check the list of supported ORMs here: https://github.com/doorkeeper-gem/doorkeeper#orms
   orm :active_record
 
+  # =======> 変更開始
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
+    # https://doorkeeper.gitbook.io/guides/ruby-on-rails/configuration
     current_user || warden.authenticate!(scope: :user)
-  end
 
+    # raise "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
+    # Put your resource owner authentication logic here.
+    # Example implementation:
+    #   User.find_by(id: session[:user_id]) || redirect_to(new_user_session_url)
+  end
+  # <======= 変更終了
+
+  # =======> 変更開始
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
   # file then you need to declare this block in order to restrict access to the web interface for
   # adding oauth authorized applications. In other case it will return 403 Forbidden response
   # every time somebody will try to access the admin web interface.
-  #
+
   admin_authenticator do
+    # https://doorkeeper.gitbook.io/guides/ruby-on-rails/configuration
     current_user || warden.authenticate!(scope: :user)
   end
+  # admin_authenticator do
+  #   # Put your admin authentication logic here.
+  #   # Example implementation:
+  #
+  #   if current_user
+  #     head :forbidden unless current_user.admin?
+  #   else
+  #     redirect_to sign_in_url
+  #   end
+  # end
+  # <======= 変更終了
 
   # You can use your own model classes if you need to extend (or even override) default
   # Doorkeeper models such as `Application`, `AccessToken` and `AccessGrant.
@@ -215,12 +236,15 @@ Doorkeeper.configure do
   #
   # enable_application_owner confirmation: false
 
+  # =======> 変更開始
   # Define access token scopes for your provider
   # For more information go to
   # https://doorkeeper.gitbook.io/guides/ruby-on-rails/scopes
-  #
-  default_scopes  :openid
+
+  default_scopes :openid
+  # default_scopes  :public
   # optional_scopes :write, :update
+  # <======= 変更終了
 
   # Allows to restrict only certain scopes for grant_type.
   # By default, all the scopes will be available for all the grant types.
