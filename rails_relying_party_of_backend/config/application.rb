@@ -20,3 +20,5 @@ module RailsRelyingPartyOfBackend
     # config.eager_load_paths << Rails.root.join("extras")
   end
 end
+
+ActiveRecord::SessionStore::Session.serializer = :json
